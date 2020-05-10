@@ -96,8 +96,9 @@ namespace TakLogic
 
         override public bool IsValidMove(BoardState board)
         {
+            bool correctPlayerIsActing = (board.GetActivePlayer() == Actor);
             bool emptyField = (board[Position].Count == 0);
-            bool actorIsOwner = (board.HistoryMoveStack.Count % 2 == (int)Actor);
+            bool actorIsOwner = (board.GetActivePlayer() == Actor);
 
             // Only on the first move, the opposing players stone may be placed.
             if (board.HistoryMoveStack.Count < 2)
@@ -111,7 +112,7 @@ namespace TakLogic
             bool enoughStones = Stone.Type == StoneType.Capstone
                                    ? (ownerState.NumCapstones > 0)
                                    : (ownerState.NumStones > 0);
-            return actorIsOwner && emptyField && enoughStones;
+            return correctPlayerIsActing && actorIsOwner && emptyField && enoughStones;
         }
     }
 
@@ -193,9 +194,10 @@ namespace TakLogic
         override public bool IsValidMove(BoardState board)
         {
             // First two moves need to be placements.
+            bool correctPlayerIsActing = (board.GetActivePlayer() == Actor);
             bool normalTurn = (board.HistoryMoveStack.Count >= 2);
             bool validStartingPosition = (board.IsInside(StartPosition));
-            if (!normalTurn || !validStartingPosition) return false;
+            if (!correctPlayerIsActing || !normalTurn || !validStartingPosition) return false;
 
             bool actorOwnsStack = (board[StartPosition].Peek().Owner == Actor);
             bool stoneLimitObeyed = (NumStonesTaken <= board.BoardSize);

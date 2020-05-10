@@ -119,6 +119,15 @@ namespace TakLogic
         }
 
         /// <summary>
+        /// Get the player to make the next turn.
+        /// </summary>
+        /// <returns>Currently acting player.</returns>
+        public Player GetActivePlayer()
+        {
+            return (Player)(HistoryMoveStack.Count % 2);
+        }
+
+        /// <summary>
         /// Check whether the game would be won with the given move.
         /// The normal condition is that a player has connected two opposing sides of the board through a 'road'.
         /// Also, iff a player has placed their last stone or run out of stones, the game ends and is decided based on number of flat-topped stacks owned.
