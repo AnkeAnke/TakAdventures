@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +16,8 @@ public class BoardHandle : MonoBehaviour
         Collider[] temporaryInstances = { Instantiate(DarkSquare.GetComponent<Collider>()), Instantiate(DarkSquare.GetComponent<Collider>()) };
         Bounds[] squareBounds = { temporaryInstances[0].bounds, temporaryInstances[1].bounds };
         Vector3 extentDiff = squareBounds[0].size - squareBounds[1].size;
-        Debug.Assert(Mathf.Abs(extentDiff.x) < Mathf.Epsilon && Mathf.Abs(extentDiff.z) < Mathf.Epsilon, "Given board squares differ too much in size.");
+        if (Mathf.Abs(extentDiff.x) > Mathf.Epsilon || Mathf.Abs(extentDiff.z) > Mathf.Epsilon)
+            throw new System.Exception("Given board squares colliders differ too much in size.");
         Vector2 squareSize = new Vector3(Mathf.Min(squareBounds[0].size.x, squareBounds[1].size.x),
                                          Mathf.Min(squareBounds[0].size.z, squareBounds[1].size.z));
         float[] squareHeightOffset = { -squareBounds[0].min.y, -squareBounds[1].min.y };

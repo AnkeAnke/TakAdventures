@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +32,7 @@ namespace TakLogic
         /// <summary>
         /// Board size, board has BoardSize x BoardSize many fields.
         /// </summary>
-        public int BoardSize { get { return Fields.Length; } }
+        public int BoardSize { get { return Fields.GetLength(0); } }
 
 
         /// <summary>
@@ -42,7 +42,8 @@ namespace TakLogic
         public BoardState(int boardSize)
         {
             var numStonesTest = GetBoardSetup(boardSize);
-            Debug.Assert(numStonesTest != null, $"Invalid board size {boardSize} has no known game configuration.");
+            if (numStonesTest == null)
+                throw new ArgumentException($"Invalid board size {boardSize}: No game configuration is known for this board size.", "boardSize");
             var numStones = numStonesTest.Value;
 
             Players = new PlayerState[2];
@@ -263,7 +264,8 @@ namespace TakLogic
         /// <returns>Points total.</returns>
         private int GetPlayerWinningScore(Player player)
         {
-            Debug.Assert(player == Player.First || player == Player.Second, "Not a valid player.");
+            if (player != Player.First && player != Player.Second)
+                throw new ArgumentException($"Not a valid player: Player enum {player} is not assigned a winning score, only First (0) and Second (1) are valid inputs.", "player");
             return BoardSize * BoardSize + Players[(byte)player].NumStones + Players[(byte)player].NumCapstones;
         }
 
@@ -417,7 +419,7 @@ namespace TakLogic
                 case Direction.Down:
                     return Vector2Int.down;
                 default:
-                    throw new ArgumentException("Invalid direction input");
+                    throw new ArgumentException("Invalid direction input", "dir");
             }
         }
 
