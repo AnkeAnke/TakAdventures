@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,7 +37,7 @@ public class PlayerReserve : MonoBehaviour
             do
             {
                 randomStackIndex = Random.Range(0, stacks.Length);
-            } while (stacks[randomStackIndex].Stones.Last().StoneType!= TakLogic.StoneType.FlatStone);
+            } while (stacks[randomStackIndex].Stones.Last().StoneType != TakLogic.StoneType.FlatStone);
 
 
             var newStone = Instantiate(Capstone);

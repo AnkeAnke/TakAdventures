@@ -66,7 +66,7 @@ namespace TakLogic
             for (int y = 0; y < BoardSize; y++)
                 for (int x = 0; x < BoardSize; x++)
                 {
-                    Fields[x, y] = new StoneStack( Fields[x, y] );
+                    Fields[x, y] = new StoneStack(Fields[x, y]);
                 }
             HistoryMoveStack = new Stack<TakMove>(other.HistoryMoveStack.Reverse());
             Players[0] = Players[0];
@@ -92,8 +92,8 @@ namespace TakLogic
         /// <returns>Copy of stone stack.</returns>
         public StoneStack this[int x, int y]
         {
-            get { return new StoneStack(Fields[x,y]); }
-            private set { Fields[x,y] = value; }
+            get { return new StoneStack(Fields[x, y]); }
+            private set { Fields[x, y] = value; }
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace TakLogic
                         foreach (Direction dir in (Direction[])Enum.GetValues(typeof(Direction)))
                         {
                             Vector2Int neighbor = current + dir.ToVector();
-                                if(IsInside(neighbor) && !alreadyVisited[neighbor.x, neighbor.y] && this[neighbor].CountsTowardsWin() == currentOwner)
+                            if (IsInside(neighbor) && !alreadyVisited[neighbor.x, neighbor.y] && this[neighbor].CountsTowardsWin() == currentOwner)
                                 {
                                     searchQueue.Enqueue(neighbor);
                                 }
@@ -221,7 +221,7 @@ namespace TakLogic
                 {
                     stack = this[x, y];
                     int initialCount = stack.Count;
-                    while(stack.Count > 0)
+                    while (stack.Count > 0)
                     {
                         top = stack.Pop();
                         if (top.Type == StoneType.Capstone)
@@ -316,6 +316,7 @@ namespace TakLogic
         public StoneStack(StoneStack other) : base(other.Reverse()) { }
 
         public StoneStack(IEnumerable<Stone> collection) : base(collection) { }
+
         /// <summary>
         /// Returns the player in control of the stack.
         /// </summary>

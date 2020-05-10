@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,7 +178,7 @@ namespace TakLogic
 
                 // A wall might be flattened in the end.
                 // Since we checked that the move is valid, we need no further checks.
-                if (step == NumStonesDroppedPerField.Count-1 && board[pos].Peek().Type == StoneType.StandingStone)
+                if (step == NumStonesDroppedPerField.Count - 1 && board[pos].Peek().Type == StoneType.StandingStone)
                 {
                     Stone flattenedWall = board[pos].Pop();
                     flattenedWall.Type = StoneType.FlatStone;
@@ -206,7 +206,7 @@ namespace TakLogic
 
             // Moving a single capstone in the end can flatten a wall.
             bool canFlattenWall = (NumStonesDroppedPerField[NumStonesDroppedPerField.Count - 1] == 1
-                                    &&  board[StartPosition].Peek().Type == StoneType.Capstone);
+                                    && board[StartPosition].Peek().Type == StoneType.Capstone);
             for (int step = 0; step < NumStonesDroppedPerField.Count; ++step)
             {
                 // Moving outside the field?

@@ -21,7 +21,7 @@ using System;
 ///  
 /// </summary>
 public static class PortableTakNotation
-{ 
+{
     public static TakLogic.TakMove GetMoveFromWord(string word)
     {
         string placementPatter = @"([FSC]?)\1(a-i)\2(3-8)\3";
@@ -134,7 +134,7 @@ public static class PortableTakNotation
         //Debug.Assert(Char.IsLetter(symbol[0]), "First character not a letter.");
         //Debug.Assert(Char.IsDigit (symbol[1]), "Second character not a digit.");
 
-        return new Vector2Int(squareName[0]-'a', squareName[1]-'0');
+        return new Vector2Int(squareName[0] - 'a', squareName[1] - '0');
     }
 
     public class InvalidPTNSyntax : Exception
