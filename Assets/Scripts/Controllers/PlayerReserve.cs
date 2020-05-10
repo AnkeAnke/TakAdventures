@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class PlayerReserve : MonoBehaviour
 {
     public StoneHandle Capstone, Stone;
+    public TakLogic.Player Owner;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,8 +27,9 @@ public class PlayerReserve : MonoBehaviour
         {
             int randomStackIndex = Random.Range(0, stacks.Length);
             var newStone = Instantiate(Stone);
+            newStone.SetOwner(Owner);
             newStone.transform.rotation *= Quaternion.Euler(0, Random.Range(-20, 20), 0);
-            stacks[randomStackIndex].AddStone(newStone);
+            stacks[randomStackIndex].Push(newStone);
         }
         for (int capstone = 0; capstone < player.NumCapstones; ++capstone)
         {
@@ -39,11 +41,9 @@ public class PlayerReserve : MonoBehaviour
 
 
             var newStone = Instantiate(Capstone);
+            newStone.SetOwner(Owner);
             
-            stacks[randomStackIndex].AddStone(newStone);
+            stacks[randomStackIndex].Push(newStone);
         }
-
-        Stone.GetComponent<MeshRenderer>().enabled = false;
-        Capstone.GetComponent<MeshRenderer>().enabled = false;
     }
 }

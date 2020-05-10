@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshRenderer))]
 public class StoneHandle : MonoBehaviour
 {
-    public Material LightColor, DarkColor;
+    public Material DarkColor, LightColor;
     public TakLogic.StoneType StoneType;
-    public int PlayerID;
-    // Start is called before the first frame update
+    protected TakLogic.Player Owner;
+
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void SetOwner(TakLogic.Player owner)
+    {
+        Owner = owner;
+        GetComponent<MeshRenderer>().material = (owner == TakLogic.Player.First ? DarkColor : LightColor);
     }
 }
