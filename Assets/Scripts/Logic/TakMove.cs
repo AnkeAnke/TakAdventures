@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,7 +83,7 @@ namespace TakLogic
             if (!IsValidMove(board))
                 return false;
 
-            board[Position].Push(Stone);
+            board.Fields[Position.x, Position.y].Push(Stone);
             if (Stone.Type == StoneType.Capstone)
                 board.Players[(int)Stone.Owner].NumCapstones--;
             else
@@ -91,19 +91,19 @@ namespace TakLogic
 
             board.HistoryMoveStack.Push(this);
             return true;
-            
+
         }
 
         override public bool IsValidMove(BoardState board)
         {
             bool correctPlayerIsActing = (board.GetActivePlayer() == Actor);
             bool emptyField = (board[Position].Count == 0);
-            bool actorIsOwner = (board.GetActivePlayer() == Actor);
+            bool actorIsOwner = (Stone.Owner == Actor);
 
             // Only on the first move, the opposing players stone may be placed.
             if (board.HistoryMoveStack.Count < 2)
             {
-                bool flatStone = (Stone.Type != StoneType.FlatStone);
+                bool flatStone = (Stone.Type == StoneType.FlatStone);
                 return !actorIsOwner && flatStone && emptyField;
             }
 
@@ -169,7 +169,7 @@ namespace TakLogic
 
             // Stack moved, reversed order (lowest one on top).
             StoneStack reverseStack = new StoneStack();
-            StoneStack startingStack = board[StartPosition];
+            StoneStack startingStack = board.Fields[StartPosition.x, StartPosition.y];
             for (int stone = 0; stone < NumStonesTaken; ++stone)
                 reverseStack.Push(startingStack.Pop());
 
@@ -179,15 +179,16 @@ namespace TakLogic
 
                 // A wall might be flattened in the end.
                 // Since we checked that the move is valid, we need no further checks.
-                if (step == NumStonesDroppedPerField.Count - 1 && board[pos].Peek().Type == StoneType.StandingStone)
+                if (step == NumStonesDroppedPerField.Count - 1 && board[pos].Count > 0 && board[pos].Peek().Type == StoneType.StandingStone)
                 {
                     Stone flattenedWall = board[pos].Pop();
                     flattenedWall.Type = StoneType.FlatStone;
-                    board[pos].Push(flattenedWall);
+                    board.Fields[pos.x, pos.y].Push(flattenedWall);
                 }
                 for (int stone = 0; stone < NumStonesDroppedPerField[step]; ++stone)
-                    board[pos].Push(reverseStack.Pop());
+                    board.Fields[pos.x, pos.y].Push(reverseStack.Pop());
             }
+            board.HistoryMoveStack.Push(this);
             return true;
         }
 
@@ -199,7 +200,7 @@ namespace TakLogic
             bool validStartingPosition = (board.IsInside(StartPosition));
             if (!correctPlayerIsActing || !normalTurn || !validStartingPosition) return false;
 
-            bool actorOwnsStack = (board[StartPosition].Peek().Owner == Actor);
+            bool actorOwnsStack = (board[StartPosition].Count > 0 && board[StartPosition].Peek().Owner == Actor);
             bool stoneLimitObeyed = (NumStonesTaken <= board.BoardSize);
             bool enoughStones = (NumStonesTaken <= board[StartPosition].Count);
             bool alwaysDroppedStone = (NumStonesDroppedPerField.Min() > 0);
@@ -216,7 +217,7 @@ namespace TakLogic
                 if (!board.IsInside(pos)) return false;
 
                 // Can place on top?
-                StoneType top = board[pos].Peek().Type;
+                StoneType top = board[pos].Count > 0 ? board[pos].Peek().Type : StoneType.FlatStone;
                 bool placeStone = (top == StoneType.FlatStone);
                 bool flattenStone = (top == StoneType.StandingStone
                                         && canFlattenWall
