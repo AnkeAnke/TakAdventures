@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +10,18 @@ public class BoardHandle : MonoBehaviour
     protected StoneStackHandle[,] Fields;
     void Start()
     {
+        SetupBoard();
+    }
+
+    public void SetupBoard()
+    {
         if (!Parent)
             Parent = transform.parent.GetComponent<Match>();
+        SetupBoard(Parent.BoardSize);
+    }
 
+    public void SetupBoard(int boardSize)
+    {
         Collider[] temporaryInstances = { Instantiate(DarkSquare.GetComponent<Collider>()), Instantiate(DarkSquare.GetComponent<Collider>()) };
         Bounds[] squareBounds = { temporaryInstances[0].bounds, temporaryInstances[1].bounds };
         Vector3 extentDiff = squareBounds[0].size - squareBounds[1].size;
@@ -24,7 +33,7 @@ public class BoardHandle : MonoBehaviour
 
         Debug.Log($"Square size: {squareSize}, from min({squareBounds[0].size.x}, {squareBounds[1].size.x})");
         Debug.Log($"Dark collider: {squareBounds[0]}");
-        int boardSize = Parent.BoardSize;
+
 
         Fields = new StoneStackHandle[boardSize, boardSize];
         for (int y = 0; y < boardSize; ++y)
@@ -38,6 +47,15 @@ public class BoardHandle : MonoBehaviour
                                                                 squareSize.y * (-0.5f * boardSize + y + 0.5f));
                 Fields[x, y] = newSquare.GetComponentInChildren<StoneStackHandle>();
             }
+    }
+
+    public void Clear()
+    {
+        for (int child = 0; child < transform.childCount; ++child)
+        {
+            Destroy(transform.GetChild(child).gameObject);
+        }
+        Fields = null;
     }
 
     void Update()

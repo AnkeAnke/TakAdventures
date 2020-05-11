@@ -353,6 +353,12 @@ namespace TakLogic
 
             return top.Owner;
         }
+
+        public StoneStack GetReversed()
+        {
+            StoneStack result = new StoneStack((IEnumerable<Stone>)this);
+            return result;
+        }
     }
 
     /// <summary>
